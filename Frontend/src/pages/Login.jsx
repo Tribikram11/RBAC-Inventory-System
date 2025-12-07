@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
 
 
-function LoginPage() {
+function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
@@ -102,4 +102,4 @@ function LoginPage() {
 }
 
 
-export default LoginPage;
+export default Login;
