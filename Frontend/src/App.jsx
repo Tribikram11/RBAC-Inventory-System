@@ -1,22 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import ManagerDashboard from "./pages/ManagerDashboard";
+import ViewerDashboard from "./pages/ViewerDashboard";
+import ItemsPage from "./pages/ItemsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Login from "./pages/Login";
 
-function Dashboard() {
-  return <h2>Dashboard — Welcome!</h2>;
-}
-
-function ItemsPage() {
-  return <h2>Items Page — View & Manage Inventory</h2>;
-}
-
-function AdminDashboard() {
-  return <h2>Admin Panel — Manage Users</h2>;
-}
-
-function NotFound() {
-  return <h2>404 — Page Not Found</h2>;
-}
 
 function App() {
   <BrowserRouter>
@@ -29,7 +19,8 @@ function App() {
 
         {/* Admin-only placeholder */}
         <Route path="/admin" element={<AdminDashboard />} />
-
+        <Route path="/manager" element={<ManagerDashboard />} />
+        <Route path="/viewer" element={<ViewerDashboard />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />
