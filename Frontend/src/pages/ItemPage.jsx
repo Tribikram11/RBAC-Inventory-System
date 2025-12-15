@@ -1,32 +1,32 @@
 import { useEffect, useState } from "react";
-import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
 import { Link } from "react-router-dom";
 
-export default function ItemsPage() {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+
+function ItemPage() {
+
+  const [items, setItems] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null)
 
   const { user } = useAuth();
 
-  // Fetch items on page load
   useEffect(() => {
-    const fetchItems = async () => {
+    const fetchitems = async () => {
+      setLoading(true)
       try {
-        const res = await api.get("/items");
+        res = await api.get("/items");
         setItems(res.data);
-      } catch (err) {
-        setError("Failed to load items.");
+      } catch (error) {
+        setError("failed to get items")
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
+    fetchitems()
+  }, [])
 
-    fetchItems();
-  }, []);
-
-  // Delete item (Admin only)
   const handleDelete = async (id) => {
     if (user.role !== "admin") return;
 
@@ -35,28 +35,31 @@ export default function ItemsPage() {
 
     try {
       await api.delete(`/items/${id}`);
-      setItems((prev) => prev.filter((item) => item._id !== id));
+      setItems((prev) => prev.filter((item) => item._id !== id))
     } catch (err) {
-      alert("Failed to delete item.");
+      alert("failed to delete items")
     }
-  };
+  }
 
-  if (loading) return <h2>Loading items...</h2>;
-  if (error) return <h2 style={{ color: "red" }}>{error}</h2>;
+  if (loading) return <h2>loading items ...</h2>
+  if (error) return <h2 style={{ color: 'red' }}>{error}</h2>
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Inventory Items</h1>
+      <h1>Items</h1>
 
-      {/* Admin only: Add new item */}
-      {user.role === "admin" && (
-        <Link to="/items/add">
-          <button style={{ marginBottom: 20 }}>Add New Item</button>
-        </Link>
-      )}
+      {/* admin only */}
+      {
+        user.role == "admin" && (
+          <Link to="/items/add">
+            <button style={{ marginBottom: 20 }}>add new item</button>
+          </Link>
+        )
+      }
 
+      {/* table */}
       {items.length === 0 ? (
-        <p>No items found.</p>
+        <p>no items found</p>
       ) : (
         <table border="1" cellPadding="10" style={{ borderCollapse: "collapse" }}>
           <thead>
@@ -108,5 +111,7 @@ export default function ItemsPage() {
         </table>
       )}
     </div>
-  );
+  )
 }
+
+export default ItemPage;
