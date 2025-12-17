@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 function ItemPage() {
 
   const [items, setItems] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null)
 
   const { user } = useAuth();

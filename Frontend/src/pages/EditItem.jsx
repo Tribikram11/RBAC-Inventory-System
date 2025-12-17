@@ -1,0 +1,146 @@
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from "react";
+import api from "../services/api";
+
+
+function EditItem() {
+    const { user } = useAuth();
+    const { id } = useParams();
+    const navigate = useNavigate();
+
+    if (user.role === "viewer") {
+        navigate("/items");
+        return null;
+    }
+
+    const [name, setName] = useState("");
+    const [sku, setSku] = useState("");
+    const [quantity, setQuantity] = useState(0);
+    const [price, setPrice] = useState(0);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [saving, setSaving] = useState(false);
+
+    useEffect(() => {
+        const fetchItem = async () => {
+            try {
+                const res = await api.get(`/items/${id}`);
+                const item = res.data;
+
+                setName(item.name);
+                setQuantity(item.quantity);
+                setSku(item.sku);
+                setPrice(item.price);
+
+            } catch (err) {
+                setError("item not found")
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchItem();
+    }, [id])
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
+
+        if (!name || !sku) {
+            setError("Name and SKU are required")
+            return;
+        }
+
+        setSaving(true);
+
+        try {
+            await api.put(`/items/${id}`, {
+                name, sku, quantity, price
+            });
+
+            navigate("/items");
+
+        } catch (error) {
+            if (err.response && err.response.data && err.response.data.msg) {
+                setError(err.response.data.msg);
+            } else {
+                setError("Failed to update item.");
+            }
+        }finally{
+            setSaving(false)
+        };
+
+        if(loading) return <h2>loading item...</h2>
+
+    }
+
+    return (
+    <div style={{ padding: 20 }}>
+      <h1>Edit Item</h1>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <form onSubmit={handleSubmit} style={{ maxWidth: 400 }}>
+        <div style={{ marginBottom: 10 }}>
+          <label>Item Name</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            style={{ width: "100%" }}
+          />
+        </div>
+
+        <div style={{ marginBottom: 10 }}>
+          <label>SKU</label>
+          <input
+            type="text"
+            value={sku}
+            onChange={(e) => setSku(e.target.value)}
+            required
+            style={{ width: "100%" }}
+          />
+        </div>
+
+        <div style={{ marginBottom: 10 }}>
+          <label>Quantity</label>
+          <input
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+            min="0"
+            style={{ width: "100%" }}
+          />
+        </div>
+
+        <div style={{ marginBottom: 10 }}>
+          <label>Price</label>
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(Number(e.target.value))}
+            min="0"
+            style={{ width: "100%" }}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={saving}
+          style={{
+            padding: "10px",
+            width: "100%",
+            cursor: saving ? "not-allowed" : "pointer",
+          }}
+        >
+          {saving ? "Updating..." : "Update Item"}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default EditItem;
+

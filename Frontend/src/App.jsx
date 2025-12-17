@@ -7,6 +7,7 @@ import ItemsPage from "./pages/ItemsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AddItem from "./pages/AddItem";
 import Login from "./pages/Login";
+import EditItem from "./pages/EditItem";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/manager" element={<ManagerDashboard />} />
         <Route path="/viewer" element={<ViewerDashboard />} />
         <Route path="/items/add" element={<AddItem />} />
+        <Route path="/items/edit/:id" element={<EditItem />} />
 
       </Route>
 
