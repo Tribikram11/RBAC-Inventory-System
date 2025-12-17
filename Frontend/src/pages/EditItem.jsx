@@ -1,81 +1,85 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
-
+import { useAuth } from "../context/AuthContext";
 
 function EditItem() {
-    const { user } = useAuth();
-    const { id } = useParams();
-    const navigate = useNavigate();
+  const { id } = useParams();          // item id from URL
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
+  // Form state
+  const [name, setName] = useState("");
+  const [sku, setSku] = useState("");
+  const [quantity, setQuantity] = useState(0);
+  const [price, setPrice] = useState(0);
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!user) return;
     if (user.role === "viewer") {
-        navigate("/items");
-        return null;
+      navigate("/items");
+    }
+  }, [user, navigate]);
+  // Fetch existing item details
+  useEffect(() => {
+    const fetchItem = async () => {
+      try {
+        const res = await api.get(`/items/${id}`);
+        const item = res.data;
+
+        setName(item.name);
+        setSku(item.sku);
+        setQuantity(item.quantity);
+        setPrice(item.price);
+      } catch {
+        setError("Failed to load item details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItem();
+  }, [id]);
+
+  // Submit update
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!name || !sku) {
+      setError("Name and SKU are required.");
+      return;
     }
 
-    const [name, setName] = useState("");
-    const [sku, setSku] = useState("");
-    const [quantity, setQuantity] = useState(0);
-    const [price, setPrice] = useState(0);
+    setSaving(true);
 
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [saving, setSaving] = useState(false);
+    try {
+      await api.put(`/items/${id}`, {
+        name,
+        sku,
+        quantity,
+        price,
+      });
 
-    useEffect(() => {
-        const fetchItem = async () => {
-            try {
-                const res = await api.get(`/items/${id}`);
-                const item = res.data;
-
-                setName(item.name);
-                setQuantity(item.quantity);
-                setSku(item.sku);
-                setPrice(item.price);
-
-            } catch (err) {
-                setError("item not found")
-            } finally {
-                setLoading(false)
-            }
-        }
-        fetchItem();
-    }, [id])
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError(null);
-
-        if (!name || !sku) {
-            setError("Name and SKU are required")
-            return;
-        }
-
-        setSaving(true);
-
-        try {
-            await api.put(`/items/${id}`, {
-                name, sku, quantity, price
-            });
-
-            navigate("/items");
-
-        } catch (error) {
-            if (err.response && err.response.data && err.response.data.msg) {
-                setError(err.response.data.msg);
-            } else {
-                setError("Failed to update item.");
-            }
-        }finally{
-            setSaving(false)
-        };
-
-        if(loading) return <h2>loading item...</h2>
-
+      navigate("/items");
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.msg) {
+        setError(err.response.data.msg);
+      } else {
+        setError("Failed to update item.");
+      }
+    } finally {
+      setSaving(false);
     }
+  };
 
-    return (
+  if (loading) return <h2>Loading item...</h2>;
+
+  return (
     <div style={{ padding: 20 }}>
       <h1>Edit Item</h1>
 
@@ -143,4 +147,3 @@ function EditItem() {
 }
 
 export default EditItem;
-

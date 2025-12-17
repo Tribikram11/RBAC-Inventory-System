@@ -1,16 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import api from "../services/api";
 
 function AddItem() {
   const { user } = useAuth();
   const navigate = useNavigate();
-
-  if (user.role !== "admin") {
-    navigate("/");
-    return null;
-
-  }
 
   const [name, setName] = useState("");
   const [sku, setSku] = useState("");
@@ -19,6 +14,13 @@ function AddItem() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (user.role !== "admin") {
+      navigate("/");
+      return null;
+    }
+  }, [user, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
