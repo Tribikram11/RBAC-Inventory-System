@@ -8,14 +8,14 @@ export const AuthProvider = ({ children }) => {
         try {
             const raw = localStorage.getItem('user');
             return raw ? JSON.parse(raw) : null;
-        } catch (err) {
+        } catch  {
             return null;
         }
     })
     const [token, setToken] = useState(() => {
         try {
             return localStorage.getItem('token') || null;
-        } catch (error) {
+        } catch  {
             return null;
         }
     })
@@ -27,14 +27,14 @@ export const AuthProvider = ({ children }) => {
         try {
             if (token) localStorage.setItem("token", token);
             else localStorage.removeItem("token")
-        } catch { }
+        } catch { return null;}
     }, [token])
 
     useEffect(() => {
         try {
             if (user) localStorage.setItem("user", JSON.stringify(user));
             else localStorage.removeItem("user")
-        } catch { }
+        } catch {return null; }
     }, [user])
 
     // login logic
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
         try {
             localStorage.removeItem('token')
             localStorage.removeItem('user');
-        } catch { }
+        } catch { return null;}
 
     }
     // You can expose helper getters if useful

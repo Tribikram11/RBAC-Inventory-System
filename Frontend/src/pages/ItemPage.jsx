@@ -16,9 +16,9 @@ function ItemPage() {
     const fetchitems = async () => {
       setLoading(true)
       try {
-        res = await api.get("/items");
+        const res = await api.get("/items");
         setItems(res.data);
-      } catch (error) {
+      } catch  {
         setError("failed to get items")
       } finally {
         setLoading(false)
@@ -36,7 +36,7 @@ function ItemPage() {
     try {
       await api.delete(`/items/${id}`);
       setItems((prev) => prev.filter((item) => item._id !== id))
-    } catch (err) {
+    } catch  {
       alert("failed to delete items")
     }
   }

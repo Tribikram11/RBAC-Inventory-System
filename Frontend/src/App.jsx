@@ -12,6 +12,7 @@ import RegisterUser from "./pages/RegisterUser";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
+import LayOut from "./components/Layout";
 
 function NotFound() {
   return <h2>404 - Page Not Found</h2>;
@@ -26,12 +27,14 @@ function App() {
 
         {/* Authenticated users */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/items" element={<ItemsPage />} />
-          <Route path="/items/add" element={<AddItem />} />
-          <Route path="/items/edit/:id" element={<EditItem />} />
-          <Route path="/manager" element={<ManagerDashboard />} />
-          <Route path="/viewer" element={<ViewerDashboard />} />
+          <Route element={<LayOut />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/items" element={<ItemsPage />} />
+            <Route path="/items/add" element={<AddItem />} />
+            <Route path="/items/edit/:id" element={<EditItem />} />
+            <Route path="/manager" element={<ManagerDashboard />} />
+            <Route path="/viewer" element={<ViewerDashboard />} />
+          </Route>
         </Route>
 
         {/* Admin-only */}
