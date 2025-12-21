@@ -4,7 +4,7 @@ function authMiddleware(req, res, next){
     const authHeader = req.headers.authorization
 
     if(!authHeader  || !authHeader.startsWith("Bearer ")){
-        return  res.json({msg:"not authorized"})
+        return res.status(401).json({ msg: "Not authorized" })
     }
 
     const token = authHeader.split(" ")[1]

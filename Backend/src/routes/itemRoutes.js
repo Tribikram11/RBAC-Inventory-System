@@ -10,9 +10,10 @@ router.get('/',authMiddleware,getItems)
 
 router.post('/',authMiddleware,roleMiddleware(['admin']),createItem)
 
-router.put('/',authMiddleware,roleMiddleware(['admin','manager']),updateItem)
+router.put('/:id', authMiddleware, roleMiddleware(['admin','manager']), updateItem);
 
-router.delete('/',authMiddleware,roleMiddleware(['admin']),deleteItem)
+router.delete('/:id', authMiddleware, roleMiddleware(['admin']), deleteItem);
+
 
 
 module.exports = router;

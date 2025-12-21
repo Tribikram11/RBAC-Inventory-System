@@ -14,8 +14,8 @@ app.use(express.json())
 connectDB(process.env.MONGO_URL)
 
 // routes 
-app.use('api/auth', authRoutes);
-app.use('api/items',itemRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/items',itemRoutes);
 
 
 app.get('/', (req, res) => {

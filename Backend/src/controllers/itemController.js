@@ -2,7 +2,8 @@ const Item = require("../models/item")
 
 const getItems = async (req, res) => {
     try{
-        const items = await Item.find().populate("updateBy", "name role");
+        const items = await Item.find().populate("lastUpdatedBy", "name role");
+
         res.json(items);
 
     }catch(err){
@@ -17,11 +18,11 @@ const createItem = async (req, res) => {
     const {name, sku, quantity, price} = req.body;
 
     if(!name || !sku){
-        res.status(400).json({msg:"enter correct details"})
+        return res.status(400).json({msg:"enter correct details"})
 
     }
     try{
-        const checkSku = await item.findOne(sku);
+        const checkSku = await Item.findOne(sku);
         if(checkSku){
             return res.json({msg: 'duplicate sku error'});
 
@@ -32,7 +33,7 @@ const createItem = async (req, res) => {
             sku,
             quantity: quantity || 0, 
             price: price || 0,
-            updatedBy: req.user.id,
+            lastUpdatedBy: req.user.userId,
             lastUpdatedAt: new Date()  
         })
 
@@ -53,7 +54,7 @@ const createItem = async (req, res) => {
 // update Item
 const updateItem = async (req, res) => {
    try{
-    const item = await Item.findById(req.param.id);
+    const item = await Item.findById(req.params.id);
 
     if(!item){
         return res.status(404).json({ msg: "Item not found" });
@@ -64,7 +65,7 @@ const updateItem = async (req, res) => {
     item.quantity = req.body.quantity ?? item.quantity;
     item.price = req.body.price ?? item.price;
 
-    itemm.updatedBy = req.user.id;
+    item.lastUpdatedBy = req.user.userId;
     item.lastUpdatedAt = new Date();
 
     await item.save();

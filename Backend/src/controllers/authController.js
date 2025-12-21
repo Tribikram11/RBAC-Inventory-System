@@ -61,7 +61,7 @@ const register = async(req, res) => {
 
         const findUser = await User.findOne({email})
 
-        if(findUser.success){
+        if(findUser){
             return res.json({
                 msg:"user exist"
             })
