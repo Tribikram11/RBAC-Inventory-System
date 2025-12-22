@@ -13,6 +13,25 @@ const getItems = async (req, res) => {
     }
 }
 
+// get single item by id
+const getItemById = async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id)
+      .populate("lastUpdatedBy", "name role");
+
+    if (!item) {
+      return res.status(404).json({ msg: "Item not found" });
+    }
+
+    res.json(item);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+
+
 // create item
 const createItem = async (req, res) => {
     const {name, sku, quantity, price} = req.body;
@@ -99,7 +118,7 @@ const deleteItem = async (req, res) => {
     }
 };
 
-module.exports = {getItems, createItem,
+module.exports = {getItems,getItemById, createItem,
                     updateItem, deleteItem
                 };
 

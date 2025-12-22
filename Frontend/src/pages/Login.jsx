@@ -1,6 +1,7 @@
-import { useState, useNavigate } from "react"
+import { useState } from "react"
 import { useAuth } from "../context/AuthContext";
-import { api } from "../services/api";
+import api from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 
 function Login() {
@@ -31,7 +32,7 @@ function Login() {
             });
             // extract token and user
             const token = res.data.token;
-            const user = res.data.user;
+            const user = res.data.checkUser;
 
             // 4. Save user & token in global AuthContext
             login({ token, user });

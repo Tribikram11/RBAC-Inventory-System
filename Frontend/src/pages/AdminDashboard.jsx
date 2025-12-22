@@ -14,7 +14,7 @@ function AdminDashboard(){
                     <li><Link to="/items">view items</Link></li>
                     <li><Link to="/items/add">add items</Link></li>
                     <li><Link to="/items/manage">manage items</Link></li>
-                    <li><Link to="/items/register-user">register new user</Link></li>
+                    <li><Link to="/admin/register-user">register new user</Link></li>
                 </ul>
             </div>
 

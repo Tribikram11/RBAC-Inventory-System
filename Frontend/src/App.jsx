@@ -5,7 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import ManagerDashboard from "./pages/ManagerDashboard";
 import ViewerDashboard from "./pages/ViewerDashboard";
-import ItemsPage from "./pages/ItemsPage";
+import ItemPage from "./pages/ItemPage";
 import AddItem from "./pages/AddItem";
 import EditItem from "./pages/EditItem";
 import RegisterUser from "./pages/RegisterUser";
@@ -29,7 +29,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<LayOut />}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/items" element={<ItemsPage />} />
+            <Route path="/items" element={<ItemPage />} />
             <Route path="/items/add" element={<AddItem />} />
             <Route path="/items/edit/:id" element={<EditItem />} />
             <Route path="/manager" element={<ManagerDashboard />} />

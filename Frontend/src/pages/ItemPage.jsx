@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 function ItemPage() {
 
-  const [items, setItems] = useState("");
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null)
 
@@ -82,7 +82,7 @@ function ItemPage() {
                 <td>{item.quantity}</td>
                 <td>₹{item.price}</td>
                 <td>{new Date(item.lastUpdatedAt).toLocaleString()}</td>
-                <td>{item.updatedBy?.name || "Unknown"}</td>
+                <td>{item.lastUpdatedBy?.name || "Unknown"}</td>
 
                 <td>
                   {/* Manager + Admin → Edit */}
