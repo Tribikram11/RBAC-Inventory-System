@@ -41,9 +41,9 @@ const createItem = async (req, res) => {
 
     }
     try{
-        const checkSku = await Item.findOne(sku);
+        const checkSku = await Item.findOne({sku});
         if(checkSku){
-            return res.json({msg: 'duplicate sku error'});
+            return res.status(400).json({msg: 'duplicate sku error'});
 
         }
 
@@ -83,6 +83,14 @@ const updateItem = async (req, res) => {
     item.name = req.body.name || item.name;
     item.quantity = req.body.quantity ?? item.quantity;
     item.price = req.body.price ?? item.price;
+    
+    if (req.body.sku && req.body.sku !== item.sku) {
+        const checkSku = await Item.findOne({ sku: req.body.sku });
+        if (checkSku) {
+            return res.status(400).json({ msg: 'duplicate sku error' });
+        }
+        item.sku = req.body.sku;
+    }
 
     item.lastUpdatedBy = req.user.userId;
     item.lastUpdatedAt = new Date();

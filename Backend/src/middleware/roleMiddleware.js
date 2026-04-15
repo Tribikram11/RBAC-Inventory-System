@@ -1,4 +1,4 @@
-roles = ["admin", "manager", "viewer"]
+const roles = ["admin", "manager", "viewer"]
 
 function roleMiddleware(roles){
     return (req, res, next) => {
